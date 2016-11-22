@@ -33,4 +33,10 @@ public class DeviceController {
     	deviceService.storeBcryptSalt();
     }
     
+    @GetMapping("/createKeystore")
+    public void createKeystore() throws Exception {
+    	this.logger.info("createKeystore");
+    	deviceService.createKeystoreLocalFile();
+    }
+    
 }

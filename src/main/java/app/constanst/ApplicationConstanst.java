@@ -5,7 +5,8 @@ import java.security.KeyStore;
 public class ApplicationConstanst {
 
 	public static class PathConstanst {
-		public static final String PATH = "classpath:mobile_auth_test.bks";
+		public static final String PATH = "classpath:export_auth.bks";
+		public static final String EXPORT = "C:/keystore/export_auth.bks";
 	}
 	
 	public static final String KEYSTORE_FILE_PASSWORD = "tKJJEjmLYcmeGv6rKzWBXgLx8pqdvnhzWD8tM6Pp82trm9FGjdTS7ve5ve9At3KZwJhUEX8pAbDxVUP5KyMGEDnKH7VLZxCm6w6A5PzvQNCByggTsFbV9qwtm35bqh9k";

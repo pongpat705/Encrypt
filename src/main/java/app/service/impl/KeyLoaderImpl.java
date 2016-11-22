@@ -38,8 +38,9 @@ public class KeyLoaderImpl implements KeyLoader {
 	
 	@PostConstruct
 	public void reloadKeystore() throws KeyStoreException, NoSuchProviderException, NoSuchAlgorithmException, CertificateException, IOException {
-		Security.addProvider(new BouncyCastleProvider());
 		
+    	Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    	
 		InputStream is = fileLoader.getFileInputStream();
 		KeyStore keyStore = KeyStore.getInstance("BKS","BC");
 		keyStore.load(is, ApplicationConstanst.KEYSTORE_FILE_PASSWORD.toCharArray());

@@ -1,5 +1,8 @@
 package app.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -8,9 +11,11 @@ import java.security.KeyStore;
 import java.security.KeyStore.SecretKeyEntry;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -29,6 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
+import app.constanst.ApplicationConstanst;
 import app.constanst.ApplicationConstanst.KEYSTORE_ALIAS;
 import app.service.DeviceService;
 import app.service.KeyLoader;
@@ -82,12 +88,26 @@ public class DeviceServiceImpl implements DeviceService {
 		return bcryptPassword;
 	}
 	
+	public void createKeystoreLocalFile() throws KeyStoreException, NoSuchProviderException, NoSuchAlgorithmException, CertificateException, IOException {
+		System.out.println("createKeystoreFile");
+		
+		KeyStore keyStore = KeyStore.getInstance("BKS", "BC");
+		
+		keyStore.load(null, ApplicationConstanst.KEYSTORE_FILE_PASSWORD.toCharArray());
+		
+		OutputStream os = new FileOutputStream(ApplicationConstanst.PathConstanst.EXPORT);
+		keyStore.store(os, ApplicationConstanst.KEYSTORE_FILE_PASSWORD.toCharArray());
+		
+		System.out.println("created keystore file success");
+		
+		os.close();
+	}
+	
 	public void storeSecretKeyAES() throws Exception {
 		System.out.println("storeSecretKey");
 		
 		KeyStore keyStore = keyLoader.load();
-		
-		KeyGenerator generator = KeyGenerator.getInstance("AES");
+		KeyGenerator generator = KeyGenerator.getInstance("AES", "BC");
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		generator.init(256, random);
 		
@@ -118,7 +138,7 @@ public class DeviceServiceImpl implements DeviceService {
 		
 		KeyStore keyStore = keyLoader.load();
 		
-		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		generator.initialize(2048, random);
 		
